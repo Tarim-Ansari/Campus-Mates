@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "180169977384",
+    "project_id": "campus-mates-7ee42",
+    "storage_bucket": "campus-mates-7ee42.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180169977384:android:29e507f1696066743ecf1d",
+        "android_client_info": {
+          "package_name": "com.example.campus_mates"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwxFmnHUlBHY0yVXi2hB4wTqFdbYeDyjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
