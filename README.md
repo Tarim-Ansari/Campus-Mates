@@ -1,16 +1,20 @@
-# campus_mates
+# Campus Mates 🎓
 
-A new Flutter project.
+A Flutter + Firebase powered college networking application.
 
-## Getting Started
+## Features
+- Firebase Email Authentication
+- Firestore user profile storage
+- Role based users (student)
+- Clean Auth routing system
 
-This project is a starting point for a Flutter application.
+## Tech Stack
+- Flutter
+- Firebase Auth
+- Cloud Firestore
 
-A few resources to get you started if this is your first Flutter project:
+## Project Status
+🚧 Under active development.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Author
+Tarim Ansari
