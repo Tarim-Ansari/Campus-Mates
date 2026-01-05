@@ -23,17 +23,17 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -48,12 +48,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCXtKCHpDQ-Q0biXlkuNyUidWVBxhU8dzE',
-    appId: '1:180169977384:web:404c868ed41e29183ecf1d',
+    appId: '1:180169977384:web:4d706a89c887e2293ecf1d',
     messagingSenderId: '180169977384',
     projectId: 'campus-mates-7ee42',
     authDomain: 'campus-mates-7ee42.firebaseapp.com',
     storageBucket: 'campus-mates-7ee42.firebasestorage.app',
-    measurementId: 'G-LVSZXHYBPV',
+    measurementId: 'G-5CBV0BFEL2',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -64,14 +64,12 @@ class DefaultFirebaseOptions {
     storageBucket: 'campus-mates-7ee42.firebasestorage.app',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCXtKCHpDQ-Q0biXlkuNyUidWVBxhU8dzE',
-    appId: '1:180169977384:web:54530d97b361ed623ecf1d',
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyD_rpKTPGuHkU6Vwaer3kzyQTmS6zZePgw',
+    appId: '1:180169977384:ios:f11799a3461394323ecf1d',
     messagingSenderId: '180169977384',
     projectId: 'campus-mates-7ee42',
-    authDomain: 'campus-mates-7ee42.firebaseapp.com',
     storageBucket: 'campus-mates-7ee42.firebasestorage.app',
-    measurementId: 'G-8PKVGG3CBT',
+    iosBundleId: 'com.example.campusMates',
   );
-
 }

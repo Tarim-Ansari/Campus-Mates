@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:campus_mates/firsestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService{
@@ -10,12 +11,21 @@ class AuthService{
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: email, 
         password: password);
-      return credential.user;
+    
+    final user = credential.user;
+    
+    
+
+
+      await FirsestoreService().createUser(
+        uid: user!.uid, 
+        email: user.email!);
+        return user;
     }
     catch(e){
       print(e);
       return null;
-    }
+  }
   }
 
   Future<User?> login (String email, String password) async {

@@ -12,9 +12,11 @@ class Loginpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(title: Text('Login page'),
       ),
-      body: Column(
+      body: 
+       Column(
 
         children: [
           TextField(controller: emailController,decoration: InputDecoration(labelText: 'Email'),),
