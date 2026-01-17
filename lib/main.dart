@@ -1,5 +1,9 @@
+// ignore_for_file: unused_import
+
 import 'package:campus_mates/auth_wrapper.dart';
+//import 'package:campus_mates/loginPage.dart';
 import 'package:flutter/material.dart';
+
 
 // 1) firebase_core to initialize Firebase
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'College Connect',
-      home: Auth_wrapper(),
+      home: AuthWrapper(),
       );
   }
 }

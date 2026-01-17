@@ -13,9 +13,6 @@ class AuthService{
         password: password);
     
     final user = credential.user;
-    
-    
-
 
       await FirsestoreService().createUser(
         uid: user!.uid, 
@@ -25,6 +22,8 @@ class AuthService{
     catch(e){
       print(e);
       return null;
+
+      
   }
   }
 

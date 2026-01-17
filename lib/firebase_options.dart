@@ -72,4 +72,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'campus-mates-7ee42.firebasestorage.app',
     iosBundleId: 'com.example.campusMates',
   );
+
 }
