@@ -1,43 +1,42 @@
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PostService {
-  final _db = FirebaseFirestore.instance;
-  final _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // ✅ IMAGE UPLOAD
-  Future<String> uploadImage(Uint8List imageBytes) async {
-    final ref = _storage
-        .ref()
-        .child("posts")
-        .child("${DateTime.now().millisecondsSinceEpoch}.jpg");
-
-    final snapshot = await ref.putData(imageBytes);
-    return await snapshot.ref.getDownloadURL();
-  }
-
-  // ✅ CREATE POST (NO AUTH CHECK HERE)
+  // ✅ CREATE POST
   Future<void> createPost({
     required String text,
     required String category,
-    required String userEmail,
-    String imageUrl = "",
   }) async {
-    await _db.collection("posts").add({
-      "text": text,
-      "category": category,
-      "imageUrl": imageUrl,
-      "userEmail": userEmail,
-      "createdAt": DateTime.now(),
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    await _db.collection('posts').add({
+      'text': text,
+      'category': category,
+      'userId': user.uid,
+      'userEmail': user.email,
+      'imageUrl': '',
+      'createdAt': Timestamp.now(),
     });
   }
 
-  // ✅ GET POSTS
-  Stream<QuerySnapshot> getPosts() {
+  // ✅ COMMUNITY POSTS
+  Stream<QuerySnapshot> getCommunityPosts() {
     return _db
-        .collection("posts")
-        .orderBy("createdAt", descending: true)
+        .collection('posts')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  // ✅ POSTS BY CATEGORY
+  Stream<QuerySnapshot> getPostsByCategory(String category) {
+    return _db
+        .collection('posts')
+        .where('category', isEqualTo: category)
+        .orderBy('createdAt', descending: true)
         .snapshots();
   }
 }

@@ -19,6 +19,7 @@ dependencies:
   firebase_storage: ^13.0.4
   firebase_messaging: ^16.0.4
   image_picker: ^1.0.7
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,4 @@ flutter:
 
   assets:
     - assets/images/campus.jpg
+    - assets/images/logo.png

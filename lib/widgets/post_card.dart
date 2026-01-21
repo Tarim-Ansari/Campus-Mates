@@ -1,74 +1,100 @@
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
+import '../chat/chat_page.dart';
 
 class PostCard extends StatelessWidget {
-  final String email;
-  final String text;
-  final String category;
-  final String imageUrl;
+  final Map<String, dynamic> data;
+  final String myId;
 
   const PostCard({
     super.key,
-    required this.email,
-    required this.text,
-    required this.category,
-    required this.imageUrl,
+    required this.data,
+    required this.myId,
   });
+
 
   @override
   Widget build(BuildContext context) {
+    final userEmail = data['userEmail'] ?? 'Unknown';
+    final userId = data['userId']; // sender uid
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 25),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xffFDF7FB),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-          ),
-        ],
+        boxShadow: [AppTheme.softShadow],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // USER EMAIL
-          Text(
-            email,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          // 🔹 HEADER
+          Row(
+            children: [
+              const CircleAvatar(radius: 20),
+              const SizedBox(width: 10),
 
-          const SizedBox(height: 8),
+              // 👉 CLICK USER → CHAT
+              GestureDetector(
+                onTap: () {
+                  if (userId == null || userId == myId) return;
 
-          // POST TEXT
-          Text(text),
-
-          // IMAGE
-          if (imageUrl.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                imageUrl,
-                width: double.infinity,
-                fit: BoxFit.cover,
-
-                // 🔥 THIS FIXES THE ERROR TEXT
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 200,
-                    color: Colors.grey.shade200,
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.broken_image,
-                      size: 40,
-                      color: Colors.grey,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChatPage(
+                        otherUserId: userId,
+                        otherUserName: userEmail,
+                      ),
                     ),
                   );
                 },
+                child: Text(
+                  userEmail,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+
+              const Spacer(),
+              const Icon(Icons.more_horiz),
+            ],
+          ),
+
+          const SizedBox(height: 15),
+
+          // 🔹 POST TEXT
+          Text(data['text'] ?? ""),
+
+          const SizedBox(height: 15),
+
+          // 🔹 IMAGE
+          if (data['imageUrl'] != null && data['imageUrl'] != "")
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                data['imageUrl'],
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
-          ],
+
+          const SizedBox(height: 15),
+
+          // 🔹 ACTIONS
+          const Row(
+            children: [
+              Icon(Icons.favorite_border),
+              SizedBox(width: 20),
+              Icon(Icons.chat_bubble_outline),
+              SizedBox(width: 20),
+              Icon(Icons.share),
+            ],
+          ),
         ],
       ),
     );

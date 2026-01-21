@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// ✅ FIXED IMPORT
-import 'screens/home_page.dart';
-import 'loginPage.dart';
+import '../screens/loginPage.dart';
+import '../screens/home_page.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -20,10 +19,10 @@ class AuthWrapper extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          return const HomePage(); // ✅ MUST BE WIDGET
+          return const HomePage();
+        } else {
+          return const LoginPage();
         }
-
-        return Loginpage();
       },
     );
   }

@@ -1,83 +1,82 @@
+// ignore_for_file: unreachable_switch_case
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../constants/categories.dart';
 import '../widgets/left_sidebar.dart';
 import '../widgets/right_sidebar.dart';
-import '../widgets/post_card.dart';
-import '../widgets/create_post_dialog.dart';
-import '../services/post_service.dart';
+import '../widgets/top_bar.dart';
 
-class HomePage extends StatelessWidget {
+import '../chat/chat_list_page.dart';
+import 'community_page.dart';
+import 'category_page.dart';
+import 'events_page.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String selected = Categories.home;
+  late final String myId;
+
+  @override
+  void initState() {
+    super.initState();
+    myId = FirebaseAuth.instance.currentUser!.uid;
+  }
+
+  Widget _buildContent() {
+    switch (selected) {
+      case Categories.chats:
+        return ChatListPage(myId: myId);
+
+      case Categories.community:
+        return CommunityPage(myId: myId);
+
+      case Categories.events:
+        return EventsPage(myId: myId);
+
+      case Categories.academics:
+      case Categories.sports:
+      case Categories.campusLife:
+      case Categories.community:
+        return CategoryPage(
+          category: selected,
+          myId: myId,
+        );
+
+
+      default:
+        return CommunityPage(myId: myId);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF5F7FB),
-
-      // ✅ SINGLE POST BUTTON
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (_) => const CreatePostDialog(),
-          );
-        },
-        label: const Text("Post"),
-        icon: const Icon(Icons.add),
-        backgroundColor: const Color(0xff009688),
-      ),
-
       body: Row(
         children: [
-          const LeftSidebar(),
-
-          // CENTER FEED
+          LeftSidebar(
+            selected: selected,
+            onSelect: (value) {
+              setState(() => selected = value);
+            },
+          ),
           Expanded(
-            flex: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: StreamBuilder(
-                stream: PostService().getPosts(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  final posts = snapshot.data!.docs;
-
-                  if (posts.isEmpty) {
-                    return const Center(child: Text("No posts yet"));
-                  }
-
-                  return ListView(
-                    children: [
-                      const Text(
-                        "TIMELINE",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      ...posts.map((doc) {
-                        final data =
-                            doc.data() as Map<String, dynamic>;
-
-                        return PostCard(
-                          email: data['userEmail'] ?? '',
-                          text: data['text'] ?? '',
-                          category: data['category'] ?? '',
-                          imageUrl: data['imageUrl'] ?? '',
-                        );
-                      }).toList(),
-                    ],
-                  );
-                },
-              ),
+            child: Column(
+              children: [
+                const TopBar(),
+                Expanded(child: _buildContent()),
+              ],
             ),
           ),
-
-          const RightSidebar(),
+          RightSidebar(myId: myId),
         ],
       ),
     );
