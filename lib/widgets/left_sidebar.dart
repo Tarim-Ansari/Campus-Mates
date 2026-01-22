@@ -64,7 +64,7 @@ class LeftSidebar extends StatelessWidget {
 
           item(context, Categories.home, "Home"),
           item(context, Categories.community, "Community"),
-          item(context, Categories.chats, "Chats"),
+          //item(context, Categories.chats, "Chats"),
 
           ExpansionTile(
             title: const Text(

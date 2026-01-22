@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/post_service.dart';
 import '../widgets/post_card.dart';
 import '../widgets/create_post_dialog.dart';
@@ -15,42 +16,40 @@ class CategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        StreamBuilder(
-          stream: PostService().getPostsByCategory(category),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text("No posts found"));
-            }
+    return Scaffold(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: PostService().getPostsByCategory(category),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            return ListView(
-              padding: const EdgeInsets.all(20),
-              children: snapshot.data!.docs.map((doc) {
-                return PostCard(
-                  data: doc.data() as Map<String, dynamic>,
-                  myId: myId,
-                );
-              }).toList(),
-            );
-          },
-        ),
+          return ListView(
+            padding: const EdgeInsets.only(bottom: 90),
+            children: snapshot.data!.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              data['id'] = doc.id;
 
-        // ✅ POST BUTTON (CATEGORIES ONLY)
-        Positioned(
-          bottom: 30,
-          right: 30,
-          child: FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (_) => CreatePostDialog(category: category),
+              return PostCard(
+                data: data,
+                myId: myId,
               );
-            },
-            child: const Icon(Icons.add),
-          ),
-        ),
-      ],
+            }).toList(),
+          );
+        },
+      ),
+
+      // ✅ POST BUTTON (same as Events page)
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFFE1C8FF),
+        child: const Icon(Icons.add, color: Colors.black),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => CreatePostDialog(category: category),
+          );
+        },
+      ),
     );
   }
 }

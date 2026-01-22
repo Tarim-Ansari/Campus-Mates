@@ -6,11 +6,7 @@ import '../widgets/create_event_dialog.dart';
 
 class EventsPage extends StatelessWidget {
   final String myId;
-
-  const EventsPage({
-    super.key,
-    required this.myId,
-  });
+  const EventsPage({super.key, required this.myId});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +15,12 @@ class EventsPage extends StatelessWidget {
         StreamBuilder<QuerySnapshot>(
           stream: EventService().getEvents(),
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text("No events found"));
+              return const Center(child: Text("No events yet"));
             }
 
             return ListView(
@@ -31,11 +31,9 @@ class EventsPage extends StatelessWidget {
                 );
               }).toList(),
             );
-
           },
         ),
 
-        // ✅ CREATE EVENT BUTTON (EVENTS ONLY)
         Positioned(
           bottom: 30,
           right: 30,

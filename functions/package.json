@@ -1,0 +1,13 @@
+[{
+	"resource": "/c:/Users/mkk54/Downloads/campus_mates/functions/package.json",
+	"owner": "_generated_diagnostic_collection_name_#0",
+	"code": "768",
+	"severity": 4,
+	"message": "Problems loading reference 'https://www.schemastore.org/package': Unable to load schema from 'https://www.schemastore.org/package': getaddrinfo ENOTFOUND www.schemastore.org.",
+	"startLineNumber": 1,
+	"startColumn": 1,
+	"endLineNumber": 1,
+	"endColumn": 2,
+	"modelVersionId": 1,
+	"origin": "extHost1"
+}]

@@ -20,6 +20,8 @@ dependencies:
   firebase_messaging: ^16.0.4
   image_picker: ^1.0.7
   url_launcher: ^6.3.0
+  flutter_local_notifications: ^17.2.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +35,23 @@ flutter:
   assets:
     - assets/images/campus.jpg
     - assets/images/logo.png
+    - assets/images/profile.jpeg
+
+    - assets/event_images/hack.jpeg
+    - assets/event_images/ai.jpg
+    - assets/event_images/sports.jpg
+    - assets/event_images/party.jpg
+    - assets/event_images/debate.jpg
+    - assets/event_images/alumni.jpg
+
+    - assets/profile_images/amaan.jpeg
+    - assets/profile_images/wasim.jpeg
+    - assets/profile_images/riya.jpeg
+
+    - assets/post_images/p1.png
+    - assets/post_images/p2.png
+    - assets/post_images/p3.png
+    - assets/post_images/p4.png
+    - assets/post_images/p5.png
+    - assets/post_images/p6.png
+    

@@ -1,6 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: unused_import, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/event_service.dart';
 
 class CreateEventDialog extends StatefulWidget {
@@ -14,11 +15,11 @@ class CreateEventDialog extends StatefulWidget {
 
 class _CreateEventDialogState extends State<CreateEventDialog> {
   final _title = TextEditingController();
-  final _desc = TextEditingController();
+  final _description = TextEditingController();
   final _venue = TextEditingController();
   final _link = TextEditingController();
 
-  DateTime? eventDate;
+  DateTime? selectedDate;
   bool loading = false;
 
   @override
@@ -28,10 +29,10 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
       content: SingleChildScrollView(
         child: Column(
           children: [
-            _field(_title, "Title"),
-            _field(_desc, "Description", max: 3),
-            _field(_venue, "Venue"),
-            _field(_link, "Registration Link"),
+            TextField(controller: _title, decoration: const InputDecoration(labelText: "Title")),
+            TextField(controller: _description, decoration: const InputDecoration(labelText: "Description")),
+            TextField(controller: _venue, decoration: const InputDecoration(labelText: "Venue")),
+            TextField(controller: _link, decoration: const InputDecoration(labelText: "Registration Link")),
 
             const SizedBox(height: 12),
 
@@ -40,7 +41,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
                 final picked = await showDatePicker(
                   context: context,
                   firstDate: DateTime.now(),
-                  lastDate: DateTime(2035),
+                  lastDate: DateTime(2100),
                   initialDate: DateTime.now(),
                 );
 
@@ -54,7 +55,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
                 if (time == null) return;
 
                 setState(() {
-                  eventDate = DateTime(
+                  selectedDate = DateTime(
                     picked.year,
                     picked.month,
                     picked.day,
@@ -64,58 +65,62 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
                 });
               },
               child: Text(
-                eventDate == null
+                selectedDate == null
                     ? "Pick Date & Time"
-                    : eventDate.toString(),
+                    : selectedDate.toString(),
               ),
             ),
           ],
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
         ElevatedButton(
           onPressed: loading
               ? null
               : () async {
-                  if (eventDate == null) return;
+                  if (_title.text.isEmpty ||
+                      _description.text.isEmpty ||
+                      _venue.text.isEmpty ||
+                      selectedDate == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Fill all fields")),
+                    );
+                    return;
+                  }
 
                   setState(() => loading = true);
 
-                  await EventService().createEvent(
-                    title: _title.text.trim(),
-                    description: _desc.text.trim(),
-                    venue: _venue.text.trim(),
-                    registrationLink: _link.text.trim(),
-                    eventDate: eventDate!,
-                    createdBy: widget.myId,
-                  );
+                  try {
+                    await EventService().createEvent(
+                      title: _title.text.trim(),
+                      description: _description.text.trim(),
+                      venue: _venue.text.trim(),
+                      registrationLink: _link.text.trim(),
+                      dateTime: selectedDate!,
+                      creatorId: widget.myId,
+                    );
 
-                  if (!mounted) return;
-                  Navigator.pop(context);
+                    if (!mounted) return;
+                    Navigator.pop(context); // ✅ CLOSE dialog
+                  } catch (e) {
+                    setState(() => loading = false);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Failed to create event")),
+                    );
+                  }
                 },
           child: loading
-              ? const CircularProgressIndicator()
-              : const Text("Create"),
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text("Post Event"),
         ),
-      ],
-    );
-  }
 
-  Widget _field(TextEditingController c, String label, {int max = 1}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextField(
-        controller: c,
-        maxLines: max,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
-      ),
+      ],
     );
   }
 }

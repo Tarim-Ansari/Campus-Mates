@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../services/notification_service.dart';
 
 class ChatService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // 🔹 Create or get chat ID
   String getChatId(String a, String b) {
     return a.hashCode <= b.hashCode ? '${a}_$b' : '${b}_$a';
   }
 
-  // 🔹 Send message
+  // 🔹 Send message + notification
   Future<void> sendMessage(String otherUserId, String text) async {
     final myId = FirebaseAuth.instance.currentUser!.uid;
     final chatId = getChatId(myId, otherUserId);
@@ -27,9 +27,17 @@ class ChatService {
       'text': text,
       'createdAt': FieldValue.serverTimestamp(),
     });
+
+    // 🔔 CHAT NOTIFICATION
+    await NotificationService().send(
+      toUserId: otherUserId,
+      title: "💬 New Message",
+      body: text,
+      type: "chat",
+      refId: chatId,
+    );
   }
 
-  // 🔹 Messages stream
   Stream<QuerySnapshot> getMessages(String otherUserId) {
     final myId = FirebaseAuth.instance.currentUser!.uid;
     final chatId = getChatId(myId, otherUserId);
@@ -42,7 +50,6 @@ class ChatService {
         .snapshots();
   }
 
-  // 🔹 MY CHATS (🔥 FIXED – requires myId passed)
   Stream<QuerySnapshot> getMyChats(String myId) {
     return _db
         .collection('chats')

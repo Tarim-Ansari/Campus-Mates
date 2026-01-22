@@ -5,26 +5,24 @@ import '../widgets/post_card.dart';
 
 class CommunityPage extends StatelessWidget {
   final String myId;
-
-  const CommunityPage({
-    super.key,
-    required this.myId,
-  });
+  const CommunityPage({super.key, required this.myId});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: PostService().getCommunityPosts(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text("No posts yet"));
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
         }
 
         return ListView(
-          padding: const EdgeInsets.all(20),
           children: snapshot.data!.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            data['id'] = doc.id;
+
             return PostCard(
-              data: doc.data() as Map<String, dynamic>,
+              data: data,
               myId: myId,
             );
           }).toList(),
